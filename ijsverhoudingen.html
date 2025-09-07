@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ijs Smaken Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000000;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    h1, h2, h3 {
+      color: #0a4d8c;
+      margin-bottom: 20px;
+      animation: fadeInDown 1s ease;
+    }
+
+    .custom-select {
+      position: relative;
+      width: 250px;
+      margin-bottom: 20px;
+    }
+
+    .custom-select-trigger {
+      background: #0a1a2f;
+      color: #0a4d8c;
+      border: 2px solid #0a4d8c;
+      padding: 12px 15px;
+      font-size: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .custom-select-trigger:hover {
+      background: #0a4d8c;
+      color: #000000;
+      box-shadow: 0 0 15px #0a4d8c;
+    }
+
+    .custom-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #0a1a2f;
+      border: 2px solid #0a4d8c;
+      border-radius: 12px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      z-index: 10;
+    }
+
+    .custom-options.open {
+      max-height: 500px;
+    }
+
+    .custom-options div {
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .custom-options div:hover {
+      background: #0a4d8c;
+      color: #000000;
+      transform: scale(1.05);
+    }
+
+    input {
+      background: #0a1a2f;
+      color: #0a4d8c;
+      border: 2px solid #0a4d8c;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    input:hover {
+      background: #0a4d8c;
+      color: #000000;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #0a4d8c;
+    }
+
+    .card {
+      background: #0a1a2f;
+      color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 320px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.9);
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: all 0.6s ease;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      animation: bounceIn 0.8s ease;
+    }
+
+    .card.fadeOut {
+      animation: fadeOut 0.4s ease forwards;
+    }
+
+    .card h2, .card h3 {
+      color: #0a4d8c;
+      margin-bottom: 15px;
+      animation: glow 2s infinite alternate;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .card li {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      transition: transform 0.4s ease, color 0.4s ease;
+    }
+
+    .card li:hover {
+      color: #0a4d8c;
+      transform: translateX(10px) scale(1.05);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(270deg, #000000, #0a1a2f, #000000);
+      background-size: 600% 600%;
+      animation: gradientShift 20s ease infinite;
+      z-index: -1;
+    }
+
+    @keyframes fadeInDown {
+      from {opacity: 0; transform: translateY(-30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes glow {
+      from {text-shadow: 0 0 5px #0a4d8c, 0 0 10px #0a4d8c;}
+      to {text-shadow: 0 0 20px #0a4d8c, 0 0 30px #0a4d8c;}
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.1); opacity: 1; }
+      80% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fadeOut {
+      from {opacity: 1; transform: translateY(0) scale(1);}
+      to {opacity: 0; transform: translateY(20px) scale(0.9);}
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Ijs Smaken</h1>
+  <div class="custom-select" id="smaakSelectWrapper">
+    <div class="custom-select-trigger">-- Kies een smaak --</div>
+    <div class="custom-options">
+      <div data-value="basisdeeg">Basisdeeg</div>
+      <div data-value="framboos">Framboos</div>
+      <div data-value="aardbei">Aardbei</div>
+      <div data-value="speculoos">Speculoos</div>
+    </div>
+  </div>
+
+  <label for="literInput">Hoeveel liter:</label>
+  <input type="number" id="literInput" value="1" step="0.5" min="0.5" />
+
+  <div id="card" class="card"></div>
+
+  <script>
+    const smaken = {
+      basisdeeg: {
+        naam: "Basisdeeg",
+        ingredienten: [
+          { naam: "Melk", hoeveelheid: 4000/6 },
+          { naam: "Room", hoeveelheid: 500/6 },
+          { naam: "Suiker", hoeveelheid: 860/6 },
+          { naam: "Melkpoeder", hoeveelheid: 175/6 },
+          { naam: "Glucose", hoeveelheid: 200/6 },
+          { naam: "Eigeel", hoeveelheid: 525/6 },
+          { naam: "Vanille-extract", hoeveelheid: 125/6 }
+        ]
+      },
+      framboos: {
+        naam: "Framboos",
+        ingredienten: [
+          { naam: "Frambozenconfituur", hoeveelheid: 300 },
+          { naam: "Frambozen (in confituur)", hoeveelheid: 188 },
+          { naam: "Suiker (in confituur)", hoeveelheid: 113 }
+        ]
+      },
+      aardbei: {
+        naam: "Aardbei",
+        ingredienten: [
+          { naam: "Aardbeienconfituur", hoeveelheid: 300 },
+          { naam: "Aardbeien (in confituur)", hoeveelheid: 188 },
+          { naam: "Suiker (in confituur)", hoeveelheid: 113 }
+        ]
+      },
+      speculoos: {
+        naam: "Speculoos",
+        ingredienten: [
+          { naam: "Speculooskoekjes (geweekt)", hoeveelheid: 125 }
+        ]
+      }
+    };
+
+    const selectWrapper = document.getElementById('smaakSelectWrapper');
+    const trigger = selectWrapper.querySelector('.custom-select-trigger');
+    const options = selectWrapper.querySelector('.custom-options');
+    const card = document.getElementById('card');
+    const literInput = document.getElementById('literInput');
+
+    let currentValue = "";
+
+    trigger.addEventListener('click', () => {
+      options.classList.toggle('open');
+    });
+
+    options.querySelectorAll('div').forEach(option => {
+      option.addEventListener('click', () => {
+        currentValue = option.dataset.value;
+        trigger.textContent = option.textContent;
+        options.classList.remove('open');
+        updateCard();
+      });
+    });
+
+    function updateCard() {
+      const liters = parseFloat(literInput.value) || 1;
+      if (currentValue && smaken[currentValue]) {
+        if (card.innerHTML !== '') {
+          card.classList.remove('show');
+          card.classList.add('fadeOut');
+          setTimeout(() => {
+            renderCard(currentValue, liters);
+          }, 400);
+        } else {
+          renderCard(currentValue, liters);
+        }
+      } else {
+        card.innerHTML = '';
+        card.classList.remove('show');
+      }
+    }
+
+    function renderCard(gekozen, liters) {
+      const smaak = smaken[gekozen];
+      let html = `<h2>${smaak.naam} - ${liters}L</h2>`;
+
+      if (gekozen === 'basisdeeg') {
+        html += '<h3>Basisingrediënten</h3>';
+      }
+
+      html += '<ul>';
+      smaak.ingredienten.forEach(ing => {
+        const adjusted = Math.round(ing.hoeveelheid * liters);
+        html += `<li><span>${ing.naam}</span><span>${adjusted}g</span></li>`;
+      });
+      html += '</ul>';
+      card.innerHTML = html;
+      card.classList.remove('fadeOut');
+      card.classList.add('show');
+    }
+
+    literInput.addEventListener('input', updateCard);
+  </script>
+
+</body>
+</html>
